@@ -10,6 +10,14 @@
             </q-toolbar>
 
             <q-card-section>
+                <q-input v-model="search" filled debounce="300" label="Search by title" clearable class="q-mb-md"
+                    @keyup.enter="fetchBlogs">
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                </q-input>
+
+
                 <div v-if="isLoading" class="q-pa-md row justify-center items-center">
                     <q-spinner color="primary" size="40px" />
                 </div>
@@ -41,7 +49,7 @@
                                                     <q-icon name="publish" />
                                                 </q-item-section>
                                                 <q-item-section>{{ props.row.status === "PUBLISHED" ? "Unpublish" :
-                    "Publish" }}</q-item-section>
+                                                    "Publish" }}</q-item-section>
                                             </q-item>
 
                                             <q-item clickable v-close-popup @click="previewBlog(props.row.id)">
@@ -188,7 +196,8 @@ export default {
                 },
             },
             isLoading: false,
-            showPreview: false
+            showPreview: false,
+            search: ""
         }
     },
     async mounted() {
@@ -199,7 +208,7 @@ export default {
 
             try {
                 this.isLoading = true;
-                const response = await blogService.getBlogs()  // Fetch blogs using the generalized request method
+                const response = await blogService.getBlogs(this.search === null ? "" : this.search)  // Fetch blogs using the generalized request method
                 this.blogs = response?.data;
 
             } catch (error) {

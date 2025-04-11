@@ -8,10 +8,9 @@ export interface PayLoad {
 };
 
 export const blogService = {
-    async getBlogs() {
+    async getBlogs(keyword: string) {
         try {
-            const blogs = await apiService.request('GET', '/api/blogs')
-            console.log(blogs);
+            const blogs = await apiService.request('GET', '/api/blogs?keyword=' + keyword)
 
             return blogs
         } catch (error) {
