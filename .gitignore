@@ -1,0 +1,36 @@
+# Node modules
+/node_modules/
+
+# Quasar build
+/dist/
+
+# Quasar config files
+/.quasar/
+
+# Log files
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# npm debug log
+npm-debug.log*
+
+# yarn error log
+yarn-error.log*
+
+# IDE or editor folders
+.idea/
+.vscode/
+
+# Local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# build artifacts
+*.tsbuildinfo
+
+.env
