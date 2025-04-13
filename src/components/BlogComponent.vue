@@ -211,8 +211,19 @@ export default {
                 const response = await blogService.getBlogs(this.search === null ? "" : this.search)  // Fetch blogs using the generalized request method
                 this.blogs = response?.data;
 
+                this.$q.notify({
+                        type: 'positive',
+                        message: 'Successfully loaded the data.',
+                    });
+                
+
             } catch (error) {
                 console.log(error)
+                this.$q.notify({
+                        type: 'negative',
+                        message: 'Something went wrong!',
+                    });
+                
             } finally {
                 this.isLoading = false
             }
@@ -233,6 +244,11 @@ export default {
 
             } catch (e) {
                 console.log(e)
+                this.$q.notify({
+                        type: 'negative',
+                        message: 'Something went wrong!',
+                    });
+                
             }
         },
         async deleteBlog() {
@@ -240,8 +256,18 @@ export default {
                 await blogService.deleteBlog(blogToDelete);
                 this.blogs = this.blogs.filter((b: Blog) => b.id !== blogToDelete);
                 this.isDeleteDialogVisible = false;
+
+                this.$q.notify({
+                        type: 'positive',
+                        message: 'Deleted successfully!',
+                    });
             } catch (e) {
                 console.log(e)
+                this.$q.notify({
+                        type: 'negative',
+                        message: 'Something went wrong!',
+                    });
+                
             }
         },
         confirmDelete(id: number) {
@@ -266,8 +292,18 @@ export default {
                     }
                     return d;
                 }) as Blog[];
+
+                this.$q.notify({
+                        type: 'positive',
+                        message: 'Successfully updated the status to ' + newStatus,
+                    });
+
             } catch (e) {
                 console.log(e)
+                this.$q.notify({
+                        type: 'negative',
+                        message: 'Something went wrong!',
+                    });
             }
         },
         async previewBlog(id: number) {
@@ -283,6 +319,10 @@ export default {
 
             } catch (e) {
                 console.log(e)
+                this.$q.notify({
+                        type: 'negative',
+                        message: 'Something went wrong!',
+                    });
             }
         },
         async submitForm() {
@@ -295,17 +335,39 @@ export default {
                 };
 
                 if (!this.isEdit) {
-                    await blogService.createBlog(data);
+                    const response = await blogService.createBlog(data);
+                    if (response.status) {
+                        this.blogs.push(response.data);
+                    }
+
+                    this.$q.notify({
+                        type: 'positive',
+                        message: 'Blog added successfully!',
+                    });
                 } else {
-                    await blogService.updateBlog(this.editId, data);
+                    const response = await blogService.updateBlog(this.editId, data);
+                    if (response.status) {
+                        this.blogs = this.blogs.map((b) =>
+                            b.id === this.editId ? { ...b, ...response.data } : b
+                        );
+                    }
+
+                    this.$q.notify({
+                        type: 'positive',
+                        message: 'Blog updated successfully!',
+                    });
                 }
 
-                await this.fetchBlogs();
+                //await this.fetchBlogs();
                 //clear
                 this.clearForm();
                 this.showDialog = false;
             } catch (e) {
                 console.log(e)
+                this.$q.notify({
+                        type: 'negative',
+                        message: 'Something went wrong!',
+                    });
             }
 
 
